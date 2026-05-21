@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>✝️ {{ file_type.upper() }} to PDF 😊</title>
+    <style>
+        body { background-color: #fffacd; text-align: center; font-family: 'Comic Sans MS', cursive; color: #ff8c00; }
+        .box { background: white; padding: 40px; border-radius: 20px; display: inline-block; margin-top: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .btn { background-color: #ff8c00; color: white; padding: 10px 30px; font-size: 1.5em; border: none; border-radius: 20px; cursor: pointer; margin-top: 20px; text-decoration: none; display: inline-block;}
+        .btn:hover { background-color: #ff4500; }
+        #downloadArea { display: none; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>✝️ {{ file_type.upper() }} transform to PDF 😊</h2>
+        <p>Upload your file, and get ready! 🥺</p>
+        
+        <input type="file" id="fileInput">
+        <br>
+        <button id="transformBtn" class="btn">Transform ✝️</button>
+        
+        <div id="downloadArea">
+            <h3>✨ All done ✨</h3>
+            <a id="downloadBtn" class="btn" download>Download 🥺</a>
+        </div>
+    </div>
+
+    <script>
+        const fileType = "{{ file_type }}";
+        document.getElementById('transformBtn').addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            if(!fileInput.files.length) { alert('Please upload a file first!'); return; }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const btn = document.getElementById('transformBtn');
+            btn.innerText = "Transforming... 🥺";
+
+            fetch('/api/convert/' + fileType, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if(res.ok) return res.json();
+                throw new Error('Failed to convert the file.');
+            })
+            .then(data => {
+                document.getElementById('downloadArea').style.display = 'block';
+                document.getElementById('downloadBtn').href = data.result_url;
+                btn.innerText = "Transform ✝️";
+            })
+            .catch(err => {
+                alert('Fail, plaase check LibreOffice is installed！');
+                btn.innerText = "Transform ✝️";
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>✝️ Photo Edge Cutting 😊</title>
+    <style>
+        body { background-color: #e6e6fa; text-align: center; font-family: sans-serif; color: #333; }
+        .workspace { position: relative; display: inline-block; margin-top: 20px; }
+        img#preview { max-width: 600px; display: none; border: 3px dashed #8a2be2; }
+        .corner {
+            width: 20px; height: 20px; background-color: blue; border-radius: 50%;
+            position: absolute; cursor: grab; transform: translate(-50%, -50%); display: none;
+            border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        .btn { padding: 10px 20px; font-size: 1.2em; border-radius: 15px; cursor: pointer; border: none; background: #8a2be2; color: white; margin: 10px; }
+        #result-area { margin-top: 30px; display: none; }
+    </style>
+</head>
+<body>
+    <h2>✝️ Modify edge points 😊</h2>
+    <input type="file" id="fileInput" accept="image/jpeg, image/png">
+    <br>
+    
+    <div class="workspace" id="workspace">
+        <img id="preview" />
+        <div class="corner" id="pt0"></div> <!-- TL -->
+        <div class="corner" id="pt1"></div> <!-- TR -->
+        <div class="corner" id="pt2"></div> <!-- BR -->
+        <div class="corner" id="pt3"></div> <!-- BL -->
+    </div>
+    <br>
+    <button class="btn" id="finishBtn" style="display:none;">Finish ✝️</button>
+
+    <div id="result-area">
+        <h3>✨ Done ✨</h3>
+        <img id="result-img" style="max-width: 600px; border: 2px solid #333;"><br>
+        <a id="downloadBtn" class="btn" style="text-decoration: none;" download>Download 🥺</a>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const finishBtn = document.getElementById('finishBtn');
+        const corners = [document.getElementById('pt0'), document.getElementById('pt1'), document.getElementById('pt2'), document.getElementById('pt3')];
+        let originalWidth = 0, originalHeight = 0;
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                preview.onload = () => {
+                    originalWidth = preview.naturalWidth;
+                    originalHeight = preview.naturalHeight;
+                    // corner points start at 10% in from each edge
+                    const w = preview.width, h = preview.height;
+                    setCorner(0, w*0.1, h*0.1); setCorner(1, w*0.9, h*0.1);
+                    setCorner(2, w*0.9, h*0.9); setCorner(3, w*0.1, h*0.9);
+                    corners.forEach(c => c.style.display = 'block');
+                    finishBtn.style.display = 'inline-block';
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function setCorner(index, x, y) {
+            corners[index].style.left = x + 'px';
+            corners[index].style.top = y + 'px';
+        }
+
+        // simple drag logic for corners
+        let dragging = null;
+        corners.forEach(corner => {
+            corner.addEventListener('mousedown', (e) => { dragging = e.target; });
+        });
+        document.addEventListener('mousemove', (e) => {
+            if(!dragging) return;
+            const rect = preview.getBoundingClientRect();
+            let x = e.clientX - rect.left; let y = e.clientY - rect.top;
+            x = Math.max(0, Math.min(x, preview.width)); y = Math.max(0, Math.min(y, preview.height));
+            dragging.style.left = x + 'px'; dragging.style.top = y + 'px';
+        });
+        document.addEventListener('mouseup', () => { dragging = null; });
+
+        finishBtn.addEventListener('click', () => {
+            const ratioX = originalWidth / preview.width;
+            const ratioY = originalHeight / preview.height;
+            // collect corner points and scale back to original image coordinates
+            const points = corners.map(c => [
+                parseFloat(c.style.left) * ratioX,
+                parseFloat(c.style.top) * ratioY
+            ]);
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('points', JSON.stringify(points));
+
+            finishBtn.innerText = "Processing...";
+            fetch('/api/scan', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('result-area').style.display = 'block';
+                document.getElementById('result-img').src = data.result_url;
+                document.getElementById('downloadBtn').href = data.result_url;
+                finishBtn.innerText = "Finish ✝️";
+            }).catch(err => alert('Failed to process the image. Please try again.'));
+        });
+    </script>
+</body>
+</html>
