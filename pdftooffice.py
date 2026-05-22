@@ -6,7 +6,7 @@ from pdf2image import convert_from_path
 from pptx import Presentation
 
 def convert_pdf_to_word(input_path, output_path):
-    """將 PDF 轉換為 Word (.docx)"""
+    """PDF to Word (.docx)"""
     try:
         cv = Converter(input_path)
         cv.convert(output_path, start=0, end=None)
@@ -42,7 +42,7 @@ def convert_pdf_to_ppt(input_path, output_path):
         poppler_bin_path = r"C:\Program Files\poppler-26.02.0\Library\bin"
         images = convert_from_path(input_path , poppler_path=poppler_bin_path)
         prs = Presentation()
-        blank_slide_layout = prs.slide_layouts[6] # 使用空白佈局
+        blank_slide_layout = prs.slide_layouts[6] # using blank page
         
         for i, image in enumerate(images):
 
