@@ -30,17 +30,17 @@ Our digital Guagua-harvesting machine comes with 5 powerful core features:
 
 To run this project locally and start accumulating your Guagua seeds, please follow these setup instructions carefully! ✝️
 
-### 1️⃣ Crucial Prerequisite: LibreOffice 🏢
+### 1️⃣ Crucial Prerequisite: LibreOffice && Poppler🏢
 This project uses **LibreOffice** as its underlying robust rendering engine to perform perfect, professional Office-to-PDF transformations. **You must download and install it on your machine first!**
 
-*   🌐 **Official Website Download Link**: [Download LibreOffice Official Directly](https://www.libreoffice.org/download/download-libreoffice/)
-*   *Note for Windows users:* Ensure LibreOffice is installed in the default path (`C:\Program Files\LibreOffice\program\soffice.exe`) so the Flask backend can call it seamlessly!
+*   🌐 **Official Website Download Link**: [Download LibreOffice Official Directly](https://www.libreoffice.org/download/download-libreoffice/)   [Download Poppler Official Directly](https://github.com/oschwartz10612/poppler-windows/releases/)
+*   *Note for Windows users:* Ensure LibreOffice is installed in the default path (`C:\Program Files\LibreOffice\program\soffice.exe`) Poppler is installed in the default path (`C:\Program Files\poppler-26.02.0`)so the Flask backend can call it seamlessly!
 
 ### 2️⃣ Python Library Dependencies 📦
 Open your VS Code terminal (or any terminal) and execute the following command to install all the necessary import libraries:
 
 ```bash
-pip install Flask opencv-python numpy Pillow
+pip install Flask opencv-python numpy Pillow pandas pdf2docx pdfplumber pdf2image python-pptx
 ```
 
 ### 3️⃣ Running the Web App 🚀
