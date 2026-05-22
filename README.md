@@ -20,6 +20,11 @@ Our digital Guagua-harvesting machine comes with 5 powerful core features:
 *   🖼️ **JPG to PDF Converter**: Turn any standard image into a standard PDF file!
 
 ---
+## ‼️ New UPDATES 
+*   📖 **PDF to Word Converter**
+*   📃 **PDF to Excel Converter**
+*   📰 **PDF to Powerpoint Converter**
+*   🙇‍♂️😞Might have some bugs, while converting to office file... I am still working on it
 
 ## 🛠️ Prerequisites & Installation
 
