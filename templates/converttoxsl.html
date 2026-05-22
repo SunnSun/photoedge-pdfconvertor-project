@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>✝️ PDF to EXCEL 😊</title>
+    <style>
+        body { background-color: #e8f5e9; text-align: center; font-family: 'Comic Sans MS', cursive; color: #1b5e20; }
+        .box { background: white; padding: 40px; border-radius: 20px; display: inline-block; margin-top: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .btn { background-color: #4caf50; color: white; padding: 10px 30px; font-size: 1.5em; border: none; border-radius: 20px; cursor: pointer; margin-top: 20px; text-decoration: none; display: inline-block;}
+        .btn:hover { background-color: #1b5e20; }
+        #downloadArea { display: none; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>✝️ PDF transform to EXCEL 😊</h2>
+        <p>Upload your PDF file, and get ready! 🥺</p>
+        
+        <input type="file" id="fileInput" accept=".pdf">
+        <br>
+        <button id="transformBtn" class="btn">Transform ✝️</button>
+        
+        <div id="downloadArea">
+            <h3>✨ All done ✨</h3>
+            <a id="downloadBtn" class="btn" download>Download Excel 🥺</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('transformBtn').addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            if(!fileInput.files.length) { alert('Please upload a PDF file first!'); return; }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const btn = document.getElementById('transformBtn');
+            btn.innerText = "Transforming... 🥺";
+
+            fetch('/api/convert_from_pdf/excel', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if(res.ok) return res.json();
+                throw new Error('Failed to convert the file.');
+            })
+            .then(data => {
+                document.getElementById('downloadArea').style.display = 'block';
+                document.getElementById('downloadBtn').href = data.result_url;
+                btn.innerText = "Transform ✝️";
+            })
+            .catch(err => {
+                alert('Conversion failed! Please check your PDF file.');
+                btn.innerText = "Transform ✝️";
+            });
+        });
+    </script>
+</body>
+</html>
