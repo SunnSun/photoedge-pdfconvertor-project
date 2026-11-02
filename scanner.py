@@ -17,7 +17,7 @@ def warp_image(input_image_path, output_image_path, points):
     top_width = np.sqrt(((top_right[0] - top_left[0]) ** 2) + ((top_right[1] - top_left[1]) ** 2))
     max_width = max(int(bottom_width), int(top_width))
     
-    max_height = int(max_width * 1.414) # A4 比例
+    max_height = int(max_width * 1.414) # A4 size
     
     
     converted_points = np.float32([[0, 0], [max_width, 0], [max_width, max_height], [0, max_height]])
